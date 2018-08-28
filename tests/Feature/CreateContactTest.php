@@ -9,12 +9,23 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class CreateContactTest extends TestCase
 {
     /**
-     * A basic test example.
+     * A test to see if contact can be created
      *
      * @return void
      */
-    public function testExample()
+    public function test_open_create_contact_page()
     {
-        $this->assertTrue(true);
+        $response = $this->get('contacts/create');
+  
+        $response->assertSuccessful();
+    }
+
+    public function test_can_create_contact()
+    {
+        $data = (factory(Contact::class)->make())->toArray();
+  
+        $this->post('post/create', $data);
+        
+        $this->assertDatabaseHas('blogs', $data);
     }
 }

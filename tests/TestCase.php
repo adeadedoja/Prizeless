@@ -5,6 +5,10 @@ namespace Tests;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Http\Exception\HttpResponseException;
+use Illuminate\Foundation\Exceptions\Handler;
 use Faker\Factory as Faker;
 
 abstract class TestCase extends BaseTestCase
@@ -19,7 +23,31 @@ abstract class TestCase extends BaseTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->disableExceptionHandling();
         $this->faker = Faker::create();
+    }
+
+    protected function disableExceptionHandling()
+    {
+        $this->oldExceptionHandler = $this->app->make(ExceptionHandler::class);
+        $this->app->instance(ExceptionHandler::class, new class extends Handler {
+            public function __construct()
+            {
+            }
+            public function report(\Exception $e)
+            {
+            }
+            public function render($request, \Exception $e)
+            {
+                throw $e;
+            }
+        });
+    }
+    
+    protected function withExceptionHandling()
+    {
+        $this->app->instance(ExceptionHandler::class, $this->oldExceptionHandler);
+        return $this;
     }
 
     /**

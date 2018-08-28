@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Validation\ValidationException;
 
 class CreateContactTest extends TestCase
 {
@@ -18,14 +19,22 @@ class CreateContactTest extends TestCase
         $response = $this->get('contacts/create');
   
         $response->assertSuccessful();
+
+        $response->assertViewIs('contacts.create');
     }
 
-    public function test_can_create_contact()
+    public function test_contact_store()
     {
-        $data = (factory(Contact::class)->make())->toArray();
+        $data = (factory('App\Contact')->make())->toArray();
   
-        $this->post('post/create', $data);
+        $response = $this->post('contacts', $data);
         
-        $this->assertDatabaseHas('blogs', $data);
+        $this->assertDatabaseHas('contacts', $data);
+
+        $response->assertStatus(302);
+
+        $response->assertRedirect('/contacts');
+
+        $response->assertSessionHas('message', 'Contact was succesfully added!');
     }
 }

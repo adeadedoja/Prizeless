@@ -50,6 +50,12 @@ abstract class TestCase extends BaseTestCase
         return $this;
     }
 
+    public function createNewContact()
+    {
+        $contact = factory('App\Contact')->create();
+        return $contact;
+    }
+
     /**
      * Reset the migrations
      */

@@ -15,16 +15,17 @@ class DeleteContactTest extends TestCase
      */
     public function testDeleteMethod()
     {
-        $data = factory('App\Contact')->create();
-
-        $response = $this->delete("/contacts/{$data->id}");
-
+        //create a new contact
+        $contact = $this->createNewContact();
+        //send to delete route
+        $response = $this->delete("/contacts/{$contact->id}");
+        //check if redirects right
         $response->assertRedirect('/contacts');
-
-        $this->assertNull($data->fresh());
-
-        $this->assertDatabaseMissing('contacts', $data->toArray());
-
+        //see if it is null
+        $this->assertNull($contact->fresh());
+        //see if it is present in the database after deleted
+        $this->assertDatabaseMissing('contacts', $contact->toArray());
+        //see if the says the text 'Contact was successfully deleted'
         $response->assertSessionHas('message', 'Contact was succesfully deleted!');
     }
 }

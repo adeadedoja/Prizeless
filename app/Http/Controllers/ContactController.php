@@ -65,9 +65,10 @@ class ContactController extends Controller
      * @param  \App\Contact  $contact
      * @return \Illuminate\Http\Response
      */
-    public function edit(Contact $contact)
+    public function edit($id)
     {
-        //
+        $contact = Contact::whereId($id)->first();
+        return view('contacts.edit', compact('contact'));
     }
 
     /**
@@ -79,7 +80,8 @@ class ContactController extends Controller
      */
     public function update(Request $request, Contact $contact)
     {
-        //
+        $contact->update($request->all());
+        return redirect('/contacts')->with('message', 'Contact was succesfully updated!');
     }
 
     /**

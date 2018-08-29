@@ -15,7 +15,7 @@ Getting Started
 
 ```bash
 # Get the project
-git clone https://github.com/adeadedoja/Prizless.git
+git clone https://github.com/adeadedoja/Prizeless.git
 
 # Change directory
 cd prizeless

@@ -9,12 +9,22 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class DeleteContactTest extends TestCase
 {
     /**
-     * A basic test example.
+     * Delete Contact test.
      *
      * @return void
      */
-    public function testExample()
+    public function testDeleteMethod()
     {
-        $this->assertTrue(true);
+        $data = factory('App\Contact')->create();
+
+        $response = $this->delete("/contacts/{$data->id}");
+
+        $response->assertRedirect('/contacts');
+
+        $this->assertNull($data->fresh());
+
+        $this->assertDatabaseMissing('contacts', $data->toArray());
+
+        $response->assertSessionHas('message', 'Contact was succesfully deleted!');
     }
 }

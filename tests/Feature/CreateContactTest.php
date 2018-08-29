@@ -23,9 +23,9 @@ class CreateContactTest extends TestCase
         $response->assertViewIs('contacts.create');
     }
 
-    public function test_contact_store()
+    public function test_it_stores_contacts()
     {
-        $data = (factory('App\Contact')->make())->toArray();
+        $data = (factory('App\Contact')->create())->toArray();
   
         $response = $this->post('contacts', $data);
         
